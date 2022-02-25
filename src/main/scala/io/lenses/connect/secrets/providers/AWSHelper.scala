@@ -162,12 +162,7 @@ trait AWSHelper extends StrictLogging {
     port: Integer,
     username: String
   ): (String, Option[OffsetDateTime]) = {
-    val request = 
-      GetIamAuthTokenRequest.builder()
-        .hostname(hostname)
-        .port(port)
-        .userName(username)
-        .build()
+    val request = new GetIamAuthTokenRequest(hostname, port, userName)
 
     Try {
       client.getAuthToken(request)

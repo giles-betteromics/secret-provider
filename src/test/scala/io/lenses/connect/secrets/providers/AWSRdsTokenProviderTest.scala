@@ -76,11 +76,7 @@ class AWSRdsTokenProviderTest
 
     val mockClient = mock[RdsIamAuthTokenGenerator]
     val secretValRequest =
-      GetIamAuthTokenRequest.builder()
-        .hostname(hostname)
-        .port(port)
-        .userName(username)
-        .build()
+      new GetIamAuthTokenRequest(hostname, port, username)
     val secretValResponse = new String(tokenValue)
     val secretJson = new JsonObject().add(secretKey, tokenValue)
 
