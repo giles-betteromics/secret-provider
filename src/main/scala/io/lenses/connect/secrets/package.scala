@@ -33,6 +33,10 @@ package object connect extends StrictLogging {
       | pattern /file.dir/[path|keyvault]/key
       |""".stripMargin
 
+  val HOST_NAME: String = "host-name"
+  val PORT: String = "host-port"
+  val USER_NAME: String = "user-name"
+
   object AuthMode extends Enumeration {
     type AuthMode = Value
     val DEFAULT, CREDENTIALS = Value

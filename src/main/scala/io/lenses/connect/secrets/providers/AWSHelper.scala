@@ -10,10 +10,12 @@ import java.nio.file.FileSystems
 import java.nio.file.Paths
 import java.time.OffsetDateTime
 import java.util.Calendar
+import java.util.Date
 
 import com.amazonaws.auth.{AWSStaticCredentialsProvider, BasicAWSCredentials, DefaultAWSCredentialsProviderChain}
 import com.amazonaws.services.secretsmanager.model.{DescribeSecretRequest, GetSecretValueRequest}
 import com.amazonaws.services.secretsmanager.{AWSSecretsManager, AWSSecretsManagerClientBuilder}
+import com.amazonaws.services.rds.auth.{RdsIamAuthTokenGenerator, GetIamAuthTokenRequest}
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.typesafe.scalalogging.StrictLogging
 import io.lenses.connect.secrets.config.AWSProviderSettings
@@ -28,6 +30,25 @@ import scala.util.{Failure, Success, Try}
 
 trait AWSHelper extends StrictLogging {
   private val separator: String = FileSystems.getDefault.getSeparator
+
+  def createRDSClient(settings: AWSProviderSettings): RdsIamAuthTokenGenerator = {
+    logger.info(
+      s"Initializing client with mode [${settings.authMode}]"
+    )
+
+    val credentialProvider = settings.authMode match {
+      case AuthMode.CREDENTIALS =>
+        new AWSStaticCredentialsProvider(new BasicAWSCredentials(settings.accessKey, settings.secretKey.value()))
+      case _ =>
+        new DefaultAWSCredentialsProviderChain()
+    }
+
+    RdsIamAuthTokenGenerator
+      .builder()
+      .credentials(credentialProvider)
+      .region(settings.region)
+      .build()
+  }
 
   // initialize the AWS client based on the auth mode
   def createClient(settings: AWSProviderSettings): AWSSecretsManager = {
@@ -48,7 +69,6 @@ trait AWSHelper extends StrictLogging {
       .withCredentials(credentialProvider)
       .withRegion(settings.region)
       .build()
-
   }
 
   // determine the ttl for the secret
@@ -132,6 +152,42 @@ trait AWSHelper extends StrictLogging {
           s"Failed to look up key [$key] in secret [$secretId}]",
           exception
         )
+    }
+  }
+
+  // Get the key from the RDS client and ttl
+  def getRdsSecretValue(
+    client: RdsIamAuthTokenGenerator,
+    hostname: String,
+    port: Integer,
+    region: String,
+    username: String
+  ): (String, Option[OffsetDateTime]) = {
+    val request = 
+      GetIamAuthTokenRequest.builder()
+        .hostname(hostname)
+        .port(port)
+        .userName(username)
+        .build()
+
+    Try {
+      client.getAuthToken(request)
+    } match {
+      case Success(token : String) =>
+
+        val cal = Calendar.getInstance()
+        cal.setTime(new Date())
+        cal.add(Calendar.MINUTE, 15)
+        val offset = 
+          Some(
+            OffsetDateTime.ofInstant(cal.toInstant, cal.getTimeZone.toZoneId))
+
+        (token, offset)
+      case Failure(exception) =>
+        throw new ConnectException(
+          s"Failed to get token for host [$hostname] port [$port] region [$region] username [$username]",
+          exception
+        )                 
     }
   }
 }

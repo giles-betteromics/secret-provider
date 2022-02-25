@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2017-2020 Lenses.io Ltd
+ *  * Copyright 2017-2020  .io Ltd
  *
  */
 
@@ -39,6 +39,7 @@ allprojects {
         azureKeyVaultVersion = "4.1.1"
         azureIdentityVersion = "1.0.5"
         awsSecretsVersion = "1.11.762"
+        awsRdsVersion = "1.11.762"
 
         //test
         scalaTest = "3.1.1"
@@ -111,6 +112,7 @@ allprojects {
         compile "com.azure:azure-security-keyvault-secrets:${azureKeyVaultVersion}"
         compile "com.azure:azure-identity:${azureIdentityVersion}"
         compile "com.amazonaws:aws-java-sdk-secretsmanager:${awsSecretsVersion}"
+        compile "com.amazonaws:aws-java-sdk-rds:${awsRdsVersion}"
 
         testImplementation "org.mockito:mockito-scala_${scalaMajorVersion}:${mockitoVersion}"
         testImplementation "org.scalacheck:scalacheck_${scalaMajorVersion}:${scalaCheck}"

@@ -58,6 +58,27 @@ object AWSProviderConfig {
       Importance.MEDIUM,
       FILE_DIR_DESC
     )
+    .define(
+      HOST_NAME,
+      Type.STRING,
+      "",
+      Importance.MEDIUM,
+      "Hostname of RDS Instance"
+    )
+    .define(
+      PORT,
+      Type.INT,
+      0,
+      Importance.MEDIUM,
+      "Port number of RDS Instance"
+    )
+    .define(
+      USER_NAME,
+      Type.STRING,
+      "",
+      Importance.MEDIUM,
+      "Username to connect to RDS database"
+    )
 }
 
 case class AWSProviderConfig(props: util.Map[String, _])

@@ -16,7 +16,10 @@ case class AWSProviderSettings(
     accessKey: String,
     secretKey: Password,
     authMode: AuthMode,
-    fileDir: String
+    fileDir: String,
+    hostname: String,
+    port: Integer,
+    username: String
 )
 
 import AbstractConfigExtensions._
@@ -42,13 +45,19 @@ object AWSProviderSettings {
         )
     }
     val fileDir = configs.getString(FILE_DIR)
+    val hostname = configs.getString(HOST_NAME)
+    val port = Integer.parseInt(configs.getString(PORT))
+    val username = configs.getString(USER_NAME)
 
     new AWSProviderSettings(
       region = region,
       accessKey = accessKey,
       secretKey = secretKey,
       authMode = authMode,
-      fileDir = fileDir
+      fileDir = fileDir,
+      hostname = hostname,
+      port = port,
+      username = username
     )
   }
 }
