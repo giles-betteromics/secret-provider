@@ -53,21 +53,22 @@ class AWSRdsTokenProviderTest
   }
 
   "should authenticate with credentials and lookup a secret" in {
+    val hostname = "my-hostname"
+    val port = 5432
+    val region = "someregion"
+    val username = "my-username"
+
     val props = Map(
       AWSProviderConfig.AUTH_METHOD -> AuthMode.CREDENTIALS.toString,
       AWSProviderConfig.AWS_ACCESS_KEY -> "somekey",
       AWSProviderConfig.AWS_SECRET_KEY -> "secretkey",
-      AWSProviderConfig.AWS_REGION -> "someregion",
-      AWSProviderConfig.HOST_NAME -> "my-hostname",
-      AWSProviderConfig.PORT -> g5432,
-      AWSProviderConfig.USER_NAME -> "my-username"
+      AWSProviderConfig.AWS_REGION -> region,
+      AWSProviderConfig.HOST_NAME -> hostname,
+      AWSProviderConfig.PORT -> port,
+      AWSProviderConfig.USER_NAME -> username
     ).asJava
 
     val secretKey = "my-secret-key"
-    val hostname = "my-hostname"
-    val port = 5432
-    val region = "us-west-2"
-    val username = "my-username"
     val tokenValue = "my-token"
 
     val provider = new AWSRdsTokenProvider()
