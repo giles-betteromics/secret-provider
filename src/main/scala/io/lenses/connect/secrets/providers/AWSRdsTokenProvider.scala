@@ -23,7 +23,6 @@ class AWSRdsTokenProvider() extends ConfigProvider with AWSHelper {
   var client: Option[RdsIamAuthTokenGenerator] = None
   var hostname: String = ""
   var port: Integer = 0
-  var region: String = ""
   var username: String = ""
 
   override def get(path: String): ConfigData =
@@ -37,7 +36,7 @@ class AWSRdsTokenProvider() extends ConfigProvider with AWSHelper {
       case Some(awsClient) =>
         //aws client caches so we don't need to check here
         val (expiry, data) = getSecretsAndExpiry(
-          getSecrets(awsClient, hostname, port, region, username, keys.asScala.toSet))
+          getSecrets(awsClient, hostname, port, username, keys.asScala.toSet))
         expiry.foreach(exp =>
           logger.info(s"Min expiry for TTL set to [${exp.toString}]"))
         data
@@ -52,7 +51,6 @@ class AWSRdsTokenProvider() extends ConfigProvider with AWSHelper {
     val settings = AWSProviderSettings(AWSProviderConfig(props = configs))
     hostname = settings.hostname
     port = settings.port
-    region = settings.region
     username = settings.username
     client = Some(createRDSClient(settings))
   }
@@ -61,12 +59,11 @@ class AWSRdsTokenProvider() extends ConfigProvider with AWSHelper {
       awsClient: RdsIamAuthTokenGenerator,
       hostname: String,
       port: Integer,
-      region: String,
       username: String,
       keys: Set[String]): Map[String, (String, Option[OffsetDateTime])] = {
     keys.map { key =>
       logger.info(s"Looking up value at [$hostname, $port, $username] for key [$key]")
-      val (value, expiry) = getRdsSecretValue(awsClient, hostname, port, region, username)
+      val (value, expiry) = getRdsSecretValue(awsClient, hostname, port, username)
       (key, (value, expiry))
     }.toMap
   }

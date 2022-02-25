@@ -94,7 +94,7 @@ class AWSRdsTokenProviderTest
     rotationRulesType.setAutomaticallyAfterDays(1.toLong)
     describeSecretResponse.setRotationRules(rotationRulesType)
 
-    when(mockClient.getAuthToken(secretValRequest))
+    when(mockClient.getAuthToken(any()))
       .thenReturn(secretValResponse)
 
     provider.client = Some(mockClient)

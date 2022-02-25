@@ -160,7 +160,6 @@ trait AWSHelper extends StrictLogging {
     client: RdsIamAuthTokenGenerator,
     hostname: String,
     port: Integer,
-    region: String,
     username: String
   ): (String, Option[OffsetDateTime]) = {
     val request = 
@@ -185,7 +184,7 @@ trait AWSHelper extends StrictLogging {
         (token, offset)
       case Failure(exception) =>
         throw new ConnectException(
-          s"Failed to get token for host [$hostname] port [$port] region [$region] username [$username]",
+          s"Failed to get token for host [$hostname] port [$port] username [$username]",
           exception
         )                 
     }
