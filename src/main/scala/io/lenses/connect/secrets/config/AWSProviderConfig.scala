@@ -18,6 +18,9 @@ object AWSProviderConfig {
   val AWS_ACCESS_KEY: String = "aws.access.key"
   val AWS_SECRET_KEY: String = "aws.secret.key"
   val AUTH_METHOD: String = "aws.auth.method"
+  val HOST_NAME: String = "aws.rds.hostname"
+  val PORT: String = "aws.rds.port"
+  val USER_NAME: String = "aws.rds.username"
 
   val config: ConfigDef = new ConfigDef()
     .define(

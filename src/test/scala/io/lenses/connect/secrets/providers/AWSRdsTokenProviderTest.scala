@@ -47,7 +47,7 @@ class AWSRdsTokenProviderTest
       AWSProviderConfig.AWS_REGION -> "someregion"
     ).asJava
 
-    val provider = new AWSRdsTokgit senProvider()
+    val provider = new AWSRdsTokenProvider()
     provider.configure(props)
     provider.close()
   }
@@ -57,7 +57,10 @@ class AWSRdsTokenProviderTest
       AWSProviderConfig.AUTH_METHOD -> AuthMode.CREDENTIALS.toString,
       AWSProviderConfig.AWS_ACCESS_KEY -> "somekey",
       AWSProviderConfig.AWS_SECRET_KEY -> "secretkey",
-      AWSProviderConfig.AWS_REGION -> "someregion"
+      AWSProviderConfig.AWS_REGION -> "someregion",
+      AWSProviderConfig.HOST_NAME -> "my-hostname",
+      AWSProviderConfig.PORT -> g5432,
+      AWSProviderConfig.USER_NAME -> "my-username"
     ).asJava
 
     val secretKey = "my-secret-key"

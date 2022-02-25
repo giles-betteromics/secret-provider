@@ -45,9 +45,9 @@ object AWSProviderSettings {
         )
     }
     val fileDir = configs.getString(FILE_DIR)
-    val hostname = configs.getString(HOST_NAME)
-    val port = Integer.parseInt(configs.getString(PORT))
-    val username = configs.getString(USER_NAME)
+    val hostname = configs.getString(AWSProviderConfig.HOST_NAME)
+    val port = configs.getInt(AWSProviderConfig.PORT)
+    val username = configs.getString(AWSProviderConfig.USER_NAME)
 
     new AWSProviderSettings(
       region = region,
